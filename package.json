@@ -20,7 +20,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "deploy": "npm version patch && npm run deploy:app",
-    "deploy:app": "npm version patch --prefix public && npm run build && npm publish ./dist --access public",
+    "deploy:app": "npm version patch --prefix public && npm run build && npm publish ./build --access public",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
