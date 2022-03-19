@@ -1,7 +1,8 @@
 {
   "name": "@fathym-it/public-web-react",
   "version": "0.0.3",
-  "private": true,
+  "private": false,
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
