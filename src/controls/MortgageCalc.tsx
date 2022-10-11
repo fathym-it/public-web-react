@@ -73,12 +73,12 @@ export class MortgageCalcForm extends React.Component<any, any> {
         // let regex=/^[0-9]+$/;
         let regex= /^[0-9]+\.?[0-9]*$/;
 
-        console.log("value = ", value)
+        // console.log("value = ", value)
 
         value = value.replace(/,/g,'');
 
         if(value.match(regex) || value === '' ){
-            console.log("it is a number!")
+            // console.log("it is a number!")
 
             this.setState({
                 [name]: value
@@ -89,7 +89,7 @@ export class MortgageCalcForm extends React.Component<any, any> {
                 });
         }
         else{
-            console.log("not a number!")
+            // console.log("not a number!")
 
         }
         
