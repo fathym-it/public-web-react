@@ -17,9 +17,9 @@ export class MortgageCalcForm extends React.Component<any, any> {
         monthlyPayment: 0.00
     };
 
-    this.inputCss = css`
-    padding: 10px;
-  `;
+      this.inputCss = css`
+      padding: 10px;
+    `;
   
       this.handleInputChange = this.handleInputChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,93 +27,14 @@ export class MortgageCalcForm extends React.Component<any, any> {
 
     MortgageSummary(props: any){
         return (
+          <>
             <div>
                 <h3>Mortgage Repayment Summary</h3>
                 <h4>Total Monthly Payment</h4>
                 <p>{props.payment}</p>
             </div>
+          </>
         );
-    }
-
-//  M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1].
-// M = Total monthly payment
-// P = The total amount of your loan
-// I = Your interest rate, as a monthly percentage
-// N = The total amount of months in your timeline for paying off your mortgage
-
-    protected calcPayment(): string{
-        let totalMonths = this.state.loanTerm * 12;
-        let ir = (this.state.interestRate/12)/100;
-        // console.log("IR = ", ir);
-        let numerator = ir * Math.pow(1+ir,totalMonths);
-        let denominator = Math.pow(1+ir,totalMonths) - 1;
-        let total = (this.state.loanAmount * (numerator / denominator)).toFixed(2);
-
-        return total;
-
-    }
-
-    protected calcLoanAmount(name: string){
-        if(name === "homeValue" || name === "downPayment"){
-            let la = Number(this.state.homeValue.replace(/,/g,'')) - Number(this.state.downPayment.replace(/,/g,''));
-            // console.log("loan amount = ", la)
-            if(la >= 0){
-                this.setState({
-                    loanAmount: la
-                })
-            }
-        }
-    }
-
-    handleInputChange(event:any): void{
-        const target = event.target;
-        let value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        // let regex=/^[0-9]+$/;
-        let regex= /^[0-9]+\.?[0-9]*$/;
-
-        // console.log("value = ", value)
-
-        value = value.replace(/,/g,'');
-
-        if(value.match(regex) || value === '' ){
-            // console.log("it is a number!")
-
-            this.setState({
-                [name]: value
-              },() => {
-                  if(name === "homeValue" || name === "downPayment"){
-                      this.calcLoanAmount(name)
-                  }
-                });
-        }
-        else{
-            // console.log("not a number!")
-
-        }
-        
-
-
-        // console.log("state = ", this.state)
-    }
-  
-    handleSubmit(event:any) {
-        let payment = this.calcPayment();
-        this.setState({monthlyPayment: payment})
-        event.preventDefault();
-    }
-
-    protected convert2string(num: any): string{
-        if(typeof num === "string"){
-            num = num.replace(/,/g,'');
-        }
-
-
-        
-        let n = Number(num).toLocaleString();
-        // console.log("n: ",n);
-        return n;
     }
 
     render() {
@@ -232,4 +153,81 @@ export class MortgageCalcForm extends React.Component<any, any> {
         
       );
     }
+
+//HELPERS
+
+//  M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1].
+// M = Total monthly payment
+// P = The total amount of your loan
+// I = Your interest rate, as a monthly percentage
+// N = The total amount of months in your timeline for paying off your mortgage
+
+protected calcPayment(): string{
+  let totalMonths = this.state.loanTerm * 12;
+  let ir = (this.state.interestRate/12)/100;
+  // console.log("IR = ", ir);
+  let numerator = ir * Math.pow(1+ir,totalMonths);
+  let denominator = Math.pow(1+ir,totalMonths) - 1;
+  let total = (this.state.loanAmount * (numerator / denominator)).toFixed(2);
+
+  return total;
+
+}
+
+protected calcLoanAmount(name: string){
+  if(name === "homeValue" || name === "downPayment"){
+      let la = Number(this.state.homeValue.replace(/,/g,'')) - Number(this.state.downPayment.replace(/,/g,''));
+      // console.log("loan amount = ", la)
+      if(la >= 0){
+          this.setState({
+              loanAmount: la
+          })
+      }
+  }
+}
+
+protected convert2string(num: any): string{
+  if(typeof num === "string"){
+      num = num.replace(/,/g,'');
+  }
+
+  let n = Number(num).toLocaleString();
+  // console.log("n: ",n);
+  return n;
+}
+
+protected handleInputChange(event:any): void{
+  const target = event.target;
+  let value = target.type === 'checkbox' ? target.checked : target.value;
+  const name = target.name;
+
+  let regex= /^[0-9]+\.?[0-9]*$/;
+
+  value = value.replace(/,/g,'');
+
+  if(value.match(regex) || value === '' ){
+      // console.log("it is a number!")
+
+      this.setState({
+          [name]: value
+        },() => {
+            if(name === "homeValue" || name === "downPayment"){
+                this.calcLoanAmount(name)
+            }
+          });
+  }
+  else{
+      // console.log("not a number!")
+
+  }
+  // console.log("state = ", this.state)
+}
+
+protected handleSubmit(event:any) {
+  let payment = this.calcPayment();
+  this.setState({monthlyPayment: payment})
+  event.preventDefault();
+}
+
+
   }
