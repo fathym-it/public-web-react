@@ -1,43 +1,56 @@
 import { css, SerializedStyles } from "@emotion/react";
 import { Box, Button, Card, InputAdornment, TextField } from "@mui/material";
 import React from "react";
+import { AppState } from "../models/AppState";
 
-export class MortgageCalcForm extends React.Component<any, any> {
+class MortgageCalcProperties {
+  public handleSubmitCalc?: (state: AppState) => void;
+
+  public state?: AppState;
+}
+
+export class MortgageCalcForm extends React.Component<MortgageCalcProperties, AppState> {
 
     protected inputCss: SerializedStyles;
 
     constructor(props:any) {
       super(props);
-      this.state = {
-        homeValue: '0',
-        interestRate: '',
-        downPayment: '0',
-        loanAmount: '0',
-        loanTerm: 30,
-        monthlyPayment: 0.00
-    };
+      if(!this.props.state){
+        // this.state = new AppState();
+        this.state = {
+          HomeValue: 0,
+          InterestRate: 0,
+          DownPayment: 0,
+          LoanAmount: 0,
+          LoanTerm: 30,
+          MonthlyPayment: 0.00
+      };
+    }
+    else {
+      this.state = this.props.state;
+    }
 
       this.inputCss = css`
       padding: 10px;
     `;
   
       this.handleInputChange = this.handleInputChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+      // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    MortgageSummary(props: any){
-        return (
-          <>
-            <div>
-                <h3>Mortgage Repayment Summary</h3>
-                <h4>Total Monthly Payment</h4>
-                <p>{props.payment}</p>
-            </div>
-          </>
-        );
-    }
+    // MortgageSummary(props: any){
+    //     return (
+    //       <>
+    //         <div>
+    //             <h3>Mortgage Repayment Summary</h3>
+    //             <h4>Total Monthly Payment</h4>
+    //             <p>{props.payment}</p>
+    //         </div>
+    //       </>
+    //     );
+    // }
 
-    render() {
+    public render() {
       return (
         <Box sx={{ width: 450, display:'flex', alignItems: 'center', justifyContent:'center' }}>
             <Card variant="outlined" sx={{paddingTop: '20px', flex:1, justifyContent: 'center', width: 450, backgroundColor: 'rgba(255,255,255, 0.9)'}}>
@@ -48,8 +61,8 @@ export class MortgageCalcForm extends React.Component<any, any> {
                             id="outlined-basic" 
                             label="Home Value" 
                             variant="outlined" 
-                            name="homeValue" 
-                            value={this.convert2string(this.state.homeValue)} 
+                            name="HomeValue" 
+                            value={this.convert2string(this.state.HomeValue)} 
                             onChange={this.handleInputChange} 
                             sx={{width: '300px'}}
                             InputProps={{
@@ -67,8 +80,8 @@ export class MortgageCalcForm extends React.Component<any, any> {
                             id="outlined-basic" 
                             label="Down Payment" 
                             variant="outlined" 
-                            name="downPayment" 
-                            value={this.convert2string(this.state.downPayment)} 
+                            name="DownPayment" 
+                            value={this.convert2string(this.state.DownPayment)} 
                             onChange={this.handleInputChange} 
                             sx={{width: '300px'}}
                             InputProps={{
@@ -86,8 +99,8 @@ export class MortgageCalcForm extends React.Component<any, any> {
                             id="outlined-basic" 
                             label="Loan Amount" 
                             variant="outlined" 
-                            name="loanAmount" 
-                            value={this.convert2string(this.state.loanAmount)} 
+                            name="LoanAmount" 
+                            value={this.convert2string(this.state.LoanAmount)} 
                             onChange={this.handleInputChange} 
                             sx={{width: '300px'}}
                             InputProps={{
@@ -105,8 +118,8 @@ export class MortgageCalcForm extends React.Component<any, any> {
                             id="outlined-basic" 
                             label="Interest Rate" 
                             variant="outlined" 
-                            name="interestRate" 
-                            value={this.state.interestRate} 
+                            name="InterestRate" 
+                            value={this.state.InterestRate} 
                             onChange={this.handleInputChange} 
                             sx={{width: '300px'}}
                             InputProps={{
@@ -124,8 +137,8 @@ export class MortgageCalcForm extends React.Component<any, any> {
                             id="outlined-basic" 
                             label="Loan Term" 
                             variant="outlined" 
-                            name="loanTerm" 
-                            value={this.state.loanTerm} 
+                            name="LoanTerm" 
+                            value={this.state.LoanTerm} 
                             onChange={this.handleInputChange} 
                             sx={{width: '300px'}}
                             InputProps={{
@@ -145,7 +158,7 @@ export class MortgageCalcForm extends React.Component<any, any> {
             <div>
                     <h3>Mortgage Repayment Summary</h3>
                     <h4>Total Monthly Payment</h4>
-                    <h3>${this.state.monthlyPayment}</h3>
+                    <h3>${this.state.MonthlyPayment}</h3>
             </div>
         </Card>
 
@@ -162,29 +175,32 @@ export class MortgageCalcForm extends React.Component<any, any> {
 // I = Your interest rate, as a monthly percentage
 // N = The total amount of months in your timeline for paying off your mortgage
 
-protected calcPayment(): string{
-  let totalMonths = this.state.loanTerm * 12;
-  let ir = (this.state.interestRate/12)/100;
-  // console.log("IR = ", ir);
-  let numerator = ir * Math.pow(1+ir,totalMonths);
-  let denominator = Math.pow(1+ir,totalMonths) - 1;
-  let total = (this.state.loanAmount * (numerator / denominator)).toFixed(2);
+// protected calcPayment(): string{
+//   let totalMonths = this.state.loanTerm * 12;
+//   let ir = (this.state.interestRate/12)/100;
+//   let numerator = ir * Math.pow(1+ir,totalMonths);
+//   let denominator = Math.pow(1+ir,totalMonths) - 1;
+//   let total = (this.state.loanAmount * (numerator / denominator)).toFixed(2);
 
-  return total;
+//   return total;
 
-}
+// }
 
-protected calcLoanAmount(name: string){
-  if(name === "homeValue" || name === "downPayment"){
-      let la = Number(this.state.homeValue.replace(/,/g,'')) - Number(this.state.downPayment.replace(/,/g,''));
-      // console.log("loan amount = ", la)
-      if(la >= 0){
-          this.setState({
-              loanAmount: la
-          })
-      }
-  }
-}
+// protected calcLoanAmount(name: string){
+//   if(name === "homeValue" || name === "downPayment"){
+//     // let la = Number(this.props?.state?.HomeValue?.replace(/,/g,'')) - Number(this.props?.state?.DownPayment?.replace(/,/g,''));
+//   if((this.state?.HomeValue >= 0) && (this.state?.DownPayment >= 0)){
+//     let la = this.state?.HomeValue - this.state?.DownPayment;
+//     // console.log("loan amount = ", la)
+//     if(la >= 0){
+//         this.setState({
+//             LoanAmount: la
+//         })
+//     }
+//   }
+      
+//   }
+// }
 
 protected convert2string(num: any): string{
   if(typeof num === "string"){
@@ -210,11 +226,13 @@ protected handleInputChange(event:any): void{
 
       this.setState({
           [name]: value
-        },() => {
-            if(name === "homeValue" || name === "downPayment"){
-                this.calcLoanAmount(name)
-            }
-          });
+        }
+        // ,() => {
+        //     if(name === "homeValue" || name === "downPayment"){
+        //         this.calcLoanAmount(name)
+        //     }
+        //   }
+          );
   }
   else{
       // console.log("not a number!")
@@ -224,8 +242,11 @@ protected handleInputChange(event:any): void{
 }
 
 protected handleSubmit(event:any) {
-  let payment = this.calcPayment();
-  this.setState({monthlyPayment: payment})
+  // let payment = this.calcPayment();
+  // this.setState({monthlyPayment: payment})
+  if(this.props.handleSubmitCalc){
+    this.props.handleSubmitCalc(this.state)
+  }
   event.preventDefault();
 }
 
