@@ -34,6 +34,9 @@ export default class App extends React.Component<AppProperties, AppState> {
     this.state = {
       ...new AppState(),
     };
+    
+    this.handleSubmit = this.handleSubmit.bind(this);
+
   }
   //#endregion
 
@@ -62,16 +65,27 @@ export default class App extends React.Component<AppProperties, AppState> {
   // protected [data:any, setData:any] = useState(''): any;
 
 
-  public handleSubmit = (event: any) => {
+  public handleSubmit = (event: AppState) => {
     // setData(event);
     console.log("data from child: ",event);
-    console.log("State: ", this.state);
+    this.setState({
+      CurrentCalculator: event.CurrentCalculator,
+      HomeValue: Number(event.HomeValue),
+      DownPayment: Number(event.DownPayment),
+      LoanAmount: Number(event.LoanAmount),
+      InterestRate: Number(event.InterestRate),
+      LoanTerm: Number(event.LoanTerm)
+    },
+    () => {
+      console.log("State: ",this.state);
+      this.calculate();
+    });
   }
 
   protected calculate(): void {
     if (this.state.CurrentCalculator) {
       const calcApi = `${this.appSvcUrl}/MortgageCalculatorStateEntity/${this.state.CurrentCalculator}`;
-
+      console.log("calculating")
       fetch(calcApi, {
         method: 'POST',
         body: JSON.stringify(this.state),
@@ -83,7 +97,9 @@ export default class App extends React.Component<AppProperties, AppState> {
         .then(
           (result) => {
             setTimeout(() => {
+              console.log("result: ", result)
               this.loadState();
+
             }, 1000);
           },
           (error) => {
@@ -133,6 +149,7 @@ export default class App extends React.Component<AppProperties, AppState> {
             if (!result.Model) {
               this.calculate();
             } else {
+              console.log("result in load state: ", result)
               this.setState(
                 {
                   ...result.Model,

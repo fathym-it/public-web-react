@@ -17,25 +17,31 @@ export class MortgageCalcForm extends React.Component<MortgageCalcProperties, Ap
       super(props);
       if(!this.props.state){
         // this.state = new AppState();
-        this.state = {
-          HomeValue: 0,
-          InterestRate: 0,
-          DownPayment: 0,
-          LoanAmount: 0,
-          LoanTerm: 30,
-          MonthlyPayment: 0.00
-      };
+      //   this.state = {
+      //     HomeValue: 0,
+      //     InterestRate: 0,
+      //     DownPayment: 0,
+      //     LoanAmount: 0,
+      //     LoanTerm: 30,
+      //     MonthlyPayment: 0.00
+      // };
+
     }
     else {
       this.state = this.props.state;
     }
+    // if(this.state.CurrentCalculator === ""){
+    //   this.setState({
+    //     CurrentCalculator: (Math.random() * 100).toString()
+    //   })
+    // }
 
       this.inputCss = css`
       padding: 10px;
     `;
   
       this.handleInputChange = this.handleInputChange.bind(this);
-      // this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     // MortgageSummary(props: any){
@@ -186,21 +192,21 @@ export class MortgageCalcForm extends React.Component<MortgageCalcProperties, Ap
 
 // }
 
-// protected calcLoanAmount(name: string){
-//   if(name === "homeValue" || name === "downPayment"){
-//     // let la = Number(this.props?.state?.HomeValue?.replace(/,/g,'')) - Number(this.props?.state?.DownPayment?.replace(/,/g,''));
-//   if((this.state?.HomeValue >= 0) && (this.state?.DownPayment >= 0)){
-//     let la = this.state?.HomeValue - this.state?.DownPayment;
-//     // console.log("loan amount = ", la)
-//     if(la >= 0){
-//         this.setState({
-//             LoanAmount: la
-//         })
-//     }
-//   }
+protected calcLoanAmount(name: string){
+  if(name === "HomeValue" || name === "DownPayment"){
+    // let la = Number(this.props?.state?.HomeValue?.replace(/,/g,'')) - Number(this.props?.state?.DownPayment?.replace(/,/g,''));
+  // if((this.state.HomeValue! >= 0) && (this.state.DownPayment! >= 0)){
+    let la = this.state.HomeValue! - this.state.DownPayment!;
+    // console.log("loan amount = ", la)
+    if(la >= 0){
+        this.setState({
+            LoanAmount: la
+        })
+    }
+  // }
       
-//   }
-// }
+  }
+}
 
 protected convert2string(num: any): string{
   if(typeof num === "string"){
@@ -227,11 +233,11 @@ protected handleInputChange(event:any): void{
       this.setState({
           [name]: value
         }
-        // ,() => {
-        //     if(name === "homeValue" || name === "downPayment"){
-        //         this.calcLoanAmount(name)
-        //     }
-        //   }
+        ,() => {
+            if(name === "HomeValue" || name === "DownPayment"){
+                this.calcLoanAmount(name)
+            }
+          }
           );
   }
   else{

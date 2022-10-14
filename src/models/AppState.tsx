@@ -8,7 +8,7 @@ export class AppState {
 
     public HomeValue?: number;
 
-    public InterestRate?: number;
+    public InterestRate?: any;
 
     public DownPayment?: number;
 
@@ -20,11 +20,9 @@ export class AppState {
 
     constructor() {
         this.Calculating = false;
-    
-        this.CurrentCalculator = '';
-
+        this.CurrentCalculator = '1';
         this.HomeValue= 0;
-        this.InterestRate= 0;
+        this.InterestRate= "";
         this.DownPayment= 0;
         this.LoanAmount= 0;
         this.LoanTerm= 30;
