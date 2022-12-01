@@ -42,6 +42,7 @@ export default class App extends React.Component<AppProperties, AppState> {
 
 
   public render() {
+    console.log("RENDER state: ", this.state);
     return (
       <div 
         className="App" 
@@ -56,6 +57,7 @@ export default class App extends React.Component<AppProperties, AppState> {
 
           <MortgageCalcForm 
             state={this.state} 
+            MonthlyPayment={this.state.MonthlyPayment}
             handleSubmitCalc={(state: AppState) =>this.handleSubmit(state)}
           />
         
@@ -84,6 +86,7 @@ export default class App extends React.Component<AppProperties, AppState> {
 
   protected calculate(): void {
     if (this.state.CurrentCalculator) {
+      console.log("app url: ", this.appSvcUrl)
       const calcApi = `${this.appSvcUrl}/MortgageCalculatorStateEntity/${this.state.CurrentCalculator}`;
       console.log("calculating")
       fetch(calcApi, {
@@ -100,9 +103,10 @@ export default class App extends React.Component<AppProperties, AppState> {
               console.log("result: ", result)
               this.loadState();
 
-            }, 1000);
+            }, 750);
           },
           (error) => {
+            console.error("ERROR: ", error);
             this.setState({
               Error: error,
             });
@@ -111,37 +115,38 @@ export default class App extends React.Component<AppProperties, AppState> {
     }
   }
 
-  protected loadCalculators(): void {
-    const calcApi = `${this.appSvcUrl}/CalculatorsStateEntity`;
+  // protected loadCalculators(): void {
+  //   const calcApi = `${this.appSvcUrl}/CalculatorsStateEntity`;
 
-    fetch(calcApi)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState(
-            {
-              ...result.Model,
-              Error: null,
-            },
-            () => {
-              setTimeout(() => {
-                this.loadState();
-              }, 750);
-            }
-          );
-        },
-        (error) => {
-          this.setState({
-            Error: error,
-          });
-        }
-      );
-  }
+  //   fetch(calcApi)
+  //     .then((res) => res.json())
+  //     .then(
+  //       (result) => {
+  //         this.setState(
+  //           {
+  //             ...result.Model,
+  //             Error: null,
+  //           },
+  //           () => {
+  //             setTimeout(() => {
+  //               this.loadState();
+  //             }, 750);
+  //           }
+  //         );
+  //       },
+  //       (error) => {
+  //         this.setState({
+  //           Error: error,
+  //         });
+  //       }
+  //     );
+  // }
 
   protected loadState(): void {
+    console.log("Load State")
     if (this.state.CurrentCalculator) {
       const calcApi = `${this.appSvcUrl}/MortgageCalculatorStateEntity/${this.state.CurrentCalculator}`;
-
+      console.log("calcAPI = ", calcApi)
       fetch(calcApi)
         .then((res) => res.json())
         .then(
@@ -156,8 +161,10 @@ export default class App extends React.Component<AppProperties, AppState> {
                   Error: null,
                 },
                 () => {
-                  // console.log(this.state);
-                }
+                  // console.log("State: ", this.state);
+                  this.render();
+                },
+                
               );
             }
           },

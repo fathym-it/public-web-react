@@ -7,6 +7,9 @@ class MortgageCalcProperties {
   public handleSubmitCalc?: (state: AppState) => void;
 
   public state?: AppState;
+
+  public MonthlyPayment?: any;
+
 }
 
 export class MortgageCalcForm extends React.Component<MortgageCalcProperties, AppState> {
@@ -14,6 +17,7 @@ export class MortgageCalcForm extends React.Component<MortgageCalcProperties, Ap
     protected inputCss: SerializedStyles;
 
     constructor(props:any) {
+      console.log("hello")
       super(props);
       if(!this.props.state){
         // this.state = new AppState();
@@ -164,7 +168,7 @@ export class MortgageCalcForm extends React.Component<MortgageCalcProperties, Ap
             <div>
                     <h3>Mortgage Repayment Summary</h3>
                     <h4>Total Monthly Payment</h4>
-                    <h3>${this.state.MonthlyPayment}</h3>
+                    <h3>${this.convert2string(this.props.MonthlyPayment?.toFixed(2))}</h3>
             </div>
         </Card>
 
