@@ -193,7 +193,6 @@ export class MortgageCalcForm extends React.Component<MortgageCalcProperties, Ap
 //   let total = (this.state.loanAmount * (numerator / denominator)).toFixed(2);
 
 //   return total;
-
 // }
 
 protected calcLoanAmount(name: string){
